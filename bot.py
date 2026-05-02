@@ -16,7 +16,6 @@ def home():
     return "🟢 Luminas Pixel está en línea y monitoreando 24/7."
 
 def run_server():
-    # Render asigna un puerto dinámico a través de la variable de entorno PORT
     port = int(os.environ.get('PORT', 10000))
     app.run(host='0.0.0.0', port=port)
 
@@ -36,7 +35,24 @@ bot = telebot.TeleBot(TOKEN)
 FORMATOS_SALIDA = ['JPG', 'PNG', 'WEBP', 'PDF', 'BMP', 'TIFF', 'ICO', 'GIF']
 
 # ==========================================
-# 3. LÓGICA PRINCIPAL DE LUMINAS PIXEL
+# 3. MENSAJE DE BIENVENIDA (/start)
+# ==========================================
+@bot.message_handler(commands=['start'])
+def send_welcome(message):
+    texto_bienvenida = (
+        "✨ **¡Bienvenido a Luminas Pixel!** ✨\n\n"
+        "Soy tu motor profesional de conversión de imágenes. Transformo tus archivos al instante, directamente en la memoria y sin perder calidad.\n\n"
+        "🛠️ **¿Cómo usar la magia?**\n"
+        "1. **Envíame** o reenvíame cualquier imagen (como foto o como documento).\n"
+        "2. **Analizaré** su estructura y peso real en milisegundos.\n"
+        "3. **Toca un botón** para elegir tu formato de destino (JPG, PNG, WEBP, ICO, PDF, etc.).\n"
+        "4. ¡Recibe tu archivo transformado al instante!\n\n"
+        "👇 *Sube tu primera imagen aquí abajo para comenzar.*"
+    )
+    bot.reply_to(message, texto_bienvenida, parse_mode='Markdown')
+
+# ==========================================
+# 4. LÓGICA PRINCIPAL DE LUMINAS PIXEL
 # ==========================================
 @bot.message_handler(content_types=['photo', 'document'])
 def handle_image(message):
@@ -146,13 +162,10 @@ def callback_query(call):
                               parse_mode='Markdown')
 
 # ==========================================
-# 4. INICIO DEL SISTEMA
+# 5. INICIO DEL SISTEMA
 # ==========================================
 if __name__ == "__main__":
-    # Primero encendemos la página web invisible
     keep_alive()
     print("🌐 Servidor web oculto encendido.")
-    
-    # Luego encendemos el bot de Telegram
     print("🤖 Luminas Pixel inicializado. Conectado a Telegram...")
     bot.polling(none_stop=True)
